@@ -38,12 +38,19 @@ const writeCounter = (count, callback) => {
 
 // Public API - Fix this function //////////////////////////////////////////////
 
-exports.getNextUniqueId = () => {
-  counter = counter + 1;
-  return zeroPaddedNumber(counter);
+exports.getNextUniqueId = (callback) => {
+  counter = readCounter(callback, (err) => {
+    if (err) {
+      throw ('error getting unuqic Id');
+    } else {
+      var id = zeroPaddedNumber(counter + 1);
+      console.log('my Id ==== > ', id);
+      id = id + 1;
+      writeCounter(id, callback);
+      return id;
+    }
+  });
 };
-
-
 
 // Configuration -- DO NOT MODIFY //////////////////////////////////////////////
 
