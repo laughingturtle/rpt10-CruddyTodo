@@ -54,7 +54,7 @@ exports.getNextUniqueId = (callback) => {
     }
   });
   // writeCounter();
-  return zeroPaddedNumber(counter);  // returns new number padded
+  return zeroPaddedNumber(counter); // returns new number padded
 };
 
 
