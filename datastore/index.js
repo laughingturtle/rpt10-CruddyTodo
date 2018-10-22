@@ -3,15 +3,42 @@ const path = require('path');
 const _ = require('underscore');
 const counter = require('./counter');
 
-var items = {};
+//var items = {};
 
 // Public API - Fix these CRUD functions ///////////////////////////////////////
 
 exports.create = (text, callback) => {
-  var id = counter.getNextUniqueId();
-  items[id] = text;
-  callback(null, { id, text });
+  counter.getNextUniqueId((err, id) => {
+    if (err) {
+      throw ('stupid id inaccessible');
+    } else {
+      var filePath = path.join(`${exports.dataDir}/${id}.txt`);
+      var message = text;
+      fs.writeFile(filePath, message, (err) => {
+        if (err) {
+          throw err;
+        } else {
+          console.log('file is saved');
+          //items[id] = text;
+          callback(null, { id, text });
+        }
+      });
+    }
+    //console.log('our id inside the callback: ', id);
+  });
+  //console.log('this is the id:', id, 'and this is the text: ', text);
+  //items[id] = text;
+  //console.log('---------> items[id] = ', items[id]);
+  //callback(null, { id, text });
 };
+
+/*
+1) get text from form
+2) create file with ID as name
+3) write to file and save
+
+
+*/
 
 exports.readAll = (callback) => {
   var data = [];

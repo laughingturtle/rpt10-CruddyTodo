@@ -39,6 +39,7 @@ const writeCounter = (count, callback) => {
 // Public API - Fix this function //////////////////////////////////////////////
 
 exports.getNextUniqueId = (callback) => {
+  // console.log('is this the callback from the test?', callback);
   readCounter(function(err, data) {
     if (err) {
       throw ('error reading counter');
@@ -49,8 +50,6 @@ exports.getNextUniqueId = (callback) => {
     }
   });
 };
-
-
 
 // Configuration -- DO NOT MODIFY //////////////////////////////////////////////
 
