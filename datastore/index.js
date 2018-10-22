@@ -18,15 +18,12 @@ exports.create = (text, callback) => {
         if (err) {
           throw err;
         } else {
-          // console.log('file is saved');
-          // items[id] = text;
           callback(null, { id, text });
         }
       });
     }
   });
 };
-
 
 exports.readAll = (callback) => {
   var data = [];
@@ -41,12 +38,21 @@ exports.readAll = (callback) => {
 };
 
 exports.readOne = (id, callback) => {
-  var text = items[id];
-  if (!text) {
-    callback(new Error(`No item with id: ${id}`));
-  } else {
-    callback(null, { id, text });
-  }
+  exports.readAll((err, filesArr) => {
+    let found = false;
+    filesArr.forEach(file => {
+      if (id === file.id) {
+        found = true;
+        var filePath = path.join(`${exports.dataDir}/${id}.txt`);
+        fs.readFile(filePath, 'utf8', (err, text) => {
+          callback(null, { id, text });
+        });
+      }
+    });
+    if (!found) {
+      callback(new Error(`No item with id: ${id}`));
+    }
+  });
 };
 
 exports.update = (id, text, callback) => {
