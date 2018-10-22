@@ -18,34 +18,26 @@ exports.create = (text, callback) => {
         if (err) {
           throw err;
         } else {
-          console.log('file is saved');
-          //items[id] = text;
+          // console.log('file is saved');
+          // items[id] = text;
           callback(null, { id, text });
         }
       });
     }
-    //console.log('our id inside the callback: ', id);
   });
-  //console.log('this is the id:', id, 'and this is the text: ', text);
-  //items[id] = text;
-  //console.log('---------> items[id] = ', items[id]);
-  //callback(null, { id, text });
 };
 
-/*
-1) get text from form
-2) create file with ID as name
-3) write to file and save
-
-
-*/
 
 exports.readAll = (callback) => {
   var data = [];
-  _.each(items, (text, id) => {
-    data.push({ id, text });
+  fs.readdir(`${exports.dataDir}`, (err, files) => {
+    files.forEach(file => {
+      let id = file.slice(0, -4);
+      let text = id;
+      data.push({ id, text });
+    });
+    callback(null, data);
   });
-  callback(null, data);
 };
 
 exports.readOne = (id, callback) => {
