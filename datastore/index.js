@@ -8,7 +8,7 @@ const counter = require('./counter');
 // Public API - Fix these CRUD functions ///////////////////////////////////////
 
 exports.create = (text, callback) => {
-  counter.getNextUniqueId((err, id) => {
+  counter.getNextUniqueId(function(err, id) {
     if (err) {
       throw ('stupid id inaccessible');
     } else {
@@ -16,7 +16,8 @@ exports.create = (text, callback) => {
       var message = text;
       fs.writeFile(filePath, message, (err) => {
         if (err) {
-          throw err;
+          // throw err;
+          callback(err, null);
         } else {
           callback(null, { id, text });
         }
@@ -56,14 +57,19 @@ exports.readOne = (id, callback) => {
 };
 
 exports.update = (id, text, callback) => {
-  var item = items[id];
-  if (!item) {
-    callback(new Error(`No item with id: ${id}`));
-  } else {
-    items[id] = text;
-    callback(null, { id, text });
-  }
+  var filePath = path.join(`${exports.dataDir}/${id}.txt`);
+  fs.readFile(filePath, 'utf8', function(err, originalText) {
+    if (err) {
+      callback(new Error(`No item with id: ${id}`));
+    } else {
+      fs.writeFile(filePath, text, (err) => {
+        callback(null, { id, text });
+      });
+    }
+  });
 };
+
+
 
 exports.delete = (id, callback) => {
   var item = items[id];
